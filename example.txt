@@ -1,0 +1,5 @@
+AO_RunSt_BU1PV1 Signed Two’s Complement Integer 16  80
+AO_F_BU1PV1 Unsigned Integer  16  81
+AO_Vab_BU1PV1 Signed Two’s Complement Integer 16  82
+AO_Psum_BU1PV1  Real (always 32 bits) 32  85
+AO_Qsum_BU1PV1  Real (always 32 bits) 32  87
