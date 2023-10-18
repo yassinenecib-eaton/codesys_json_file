@@ -39,6 +39,63 @@ std::vector<std::string> split(const std::string& s, char delim)
     return result;
 }
 
+int defineSize(std::string& aString)
+{
+    try
+    {
+        if (aString.compare("16") == 0)
+        {
+            return 1;
+        }
+
+        else if (aString.compare("32") == 0)
+        {
+            return 2;
+        }
+
+        else
+        {
+            throw(aString);
+        }
+    }
+
+     catch (std::string error)
+     {
+         std::cout << "Size value out of range: " + error << std::endl;
+     }
+}
+
+ int defineType(std::string& aString)
+ {
+     try
+     {
+         //Fourth field is "type"
+         if (aString.find("Signed") != std::string::npos)
+         {
+             return 1;
+         }
+         else if (aString.find("Unsigned") != std::string::npos)
+         {
+             return 2;
+         }
+
+         else if (aString.find("Real (always 32 bits)") != std::string::npos)
+         {
+             return 3;
+         }
+
+         else
+         {
+             throw(aString);
+         }
+    }
+    
+    catch(std::string error)
+    {
+        std::cout << "Type value out of range: " + error << std::endl;
+    }
+}
+
 int main()
 {
     std::string line;
@@ -53,7 +110,7 @@ int main()
         headerJson(myJsonfile);
 
         while (std::getline(myfile, line))
-         //std::getline(myfile, line);
+        // std::getline(myfile, line);
         {
             std::cout << "  {" << std::endl;
             myJsonfile << "  {" << std::endl;
@@ -66,51 +123,35 @@ int main()
                 int i = 0;
                //std::cout << line << std::endl;
                 std::vector<std::string> word = split(line, '\t');
-               // for (auto i : word) std::cout << i << std::endl;
+                //for (auto i : word) std::cout << i << std::endl;
 
 
                 int l = word.size()-1;
                 //First field is "name"
-                std::cout << "  \"name\":" + word[0] + "," << std::endl;
-                myJsonfile << "  \"name\":" + word[0] + "," << std::endl;
+                std::cout << "  \"name\":\"" + word[0] + "\"," << std::endl;
+                myJsonfile << "  \"name\":\"" + word[0] + "\"," << std::endl;
 
                 //Second field is "addr"
                 std::cout << "  \"addr\":" + word[l-1] + "," << std::endl;
                 myJsonfile << "  \"addr\":" + word[l-1] + "," << std::endl;
 
                 //Third field is "size"
-                if (word[l - 2].compare("16")==0)
-                {
-                    std::cout << "  \"size\": 1" << "," << std::endl;
-                    myJsonfile << "  \"size\": 1" << "," << std::endl;
-                }
-
-                else if (word[l - 2].compare("32")==0)
-                {
-                    std::cout << "  \"size\": 2" << "," << std::endl;
-                    myJsonfile << "  \"size\": 2" << "," << std::endl;
-                }
+                unsigned int  a_size = defineSize(word[l - 2]);
+                std::cout << "  \"size\":" << a_size << "," << std::endl;
+                myJsonfile << "  \"size\":" << a_size << "," << std::endl;
+               
 
                 //Fourth field is "type"
-                if (word[1].find("Signed") != std::string::npos)
-                {
-                   // std::cout << "fourth field:  \"type\":" + word[1] + "," << std::endl;
-                    std::cout << "  \"type\": 1" << "," << std::endl;
-                    myJsonfile << "  \"type\": 1" << "," << std::endl;
-                }
-                else if (word[1].find("Unsigned") != std::string::npos)
-                {
-                    std::cout << "  \"type\": 2" << "," << std::endl;
-                    myJsonfile << "  \"type\": 2" << "," << std::endl;
-                }
+                unsigned int a_type = defineType(word[1]);
+                std::cout << "  \"size\":" << a_type << "," << std::endl;
+                myJsonfile << "  \"size\":" << a_type << "," << std::endl;
   
                 //Last field is "value"
-                std::cout << "  \"value\":" + word[l] + "," << std::endl;
-                myJsonfile << "  \"value\":" + word[l] + "," << std::endl;
+                std::cout << "  \"value\":" + word[l] << std::endl;
+                myJsonfile << "  \"value\":" + word[l] << std::endl;
 
-
-                std::cout << "  }\n" << std::endl;
-                myJsonfile << "  }\n" << std::endl;
+                std::cout << "  },\n" << std::endl;
+                myJsonfile << "  },\n" << std::endl;
             }
         }
         footerJson(myJsonfile);
