@@ -7,16 +7,21 @@
 #include <sstream>
 #include <vector>
 
-void headerJson()
+void headerJson(std::ofstream& myfile)
 {
     std::cout << "{" << std::endl;
+    myfile << "{" << std::endl;
     std::cout << "  \"points\":[" << std::endl;
+    myfile << "  \"points\":[" << std::endl;
+
 }
 
-void footerJson()
+void footerJson(std::ofstream& myfile)
 {
     std::cout << " ]" << std::endl;
+    myfile << " ]" << std::endl;
     std::cout << "}" << std::endl;
+    myfile << "}" << std::endl;
 }
 
 
@@ -41,12 +46,17 @@ int main()
 
     if (myfile.is_open())
     {
-        headerJson();
+        //Create output file
+        std::ofstream myJsonfile;
+        myJsonfile.open("resultFile.json");
+
+        headerJson(myJsonfile);
 
         while (std::getline(myfile, line))
         // std::getline(myfile, line);
         {
             std::cout << "  {" << std::endl;
+            myJsonfile << "  {" << std::endl;
             if (line == "")
             {
                 std::cout << "empty line" << std::endl;
@@ -59,31 +69,40 @@ int main()
 
                 int l = word.size()-1;
                 std::cout << "  \"name\":" + word[0] + "," << std::endl;
+                myJsonfile << "  \"name\":" + word[0] + "," << std::endl;
 
                 std::cout << "  \"addr\":" + word[l] + "," << std::endl;
-              
+                myJsonfile << "  \"addr\":" + word[l] + "," << std::endl;
+
                 if (word[l - 2].compare("16")==0)
                 {
                     std::cout << "  \"size\": 1" << "," << std::endl;
+                    myJsonfile << "  \"size\": 1" << "," << std::endl;
                 }
 
                 else if (word[l - 2].compare("32")==0)
                 {
                     std::cout << "  \"size\": 2" << "," << std::endl;
+                    myJsonfile << "  \"size\": 2" << "," << std::endl;
                 }
 
                 if (word[1].compare("Signed")==0)
                 {
                     std::cout << "  \"type\": 1" << "," << std::endl;
+                    myJsonfile << "  \"type\": 1" << "," << std::endl;
                 }
                 else if (word[1].compare("Unsigned")==0)
                 {
                     std::cout << "  \"type\": 2" << "," << std::endl;
+                    myJsonfile << "  \"type\": 1" << "," << std::endl;
                 }
                 std::cout << "  }\n" << std::endl;
+                myJsonfile << "  }\n" << std::endl;
             }
         }
-        footerJson();
+        footerJson(myJsonfile);
+        myJsonfile.close();
+
     }
 
     else
