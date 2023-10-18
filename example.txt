@@ -1,5 +1,11 @@
-AO_RunSt_BU1PV1 Signed Two’s Complement Integer 16  80
-AO_F_BU1PV1 Unsigned Integer  16  81
-AO_Vab_BU1PV1 Signed Two’s Complement Integer 16  82
-AO_Psum_BU1PV1  Real (always 32 bits) 32  85
-AO_Qsum_BU1PV1  Real (always 32 bits) 32  87
+AO_BMSmaxSOC_BU1ES1	Signed Two’s Complement Integer	16	102	0
+AO_BMSminSOC_BU1ES1	Signed Two’s Complement Integer	16	103	0
+AO_BMSmaxIchrg_BU1ES1	Signed Two’s Complement Integer	16	104	0
+AO_BMSmaxIdsch_BU1ES1	Signed Two’s Complement Integer	16	105	0
+AO_BMSBattSt_BU1ES1	Unsigned Integer	16	109	0
+AO_BMSChaSt_BU1ES1	Unsigned Integer	16	110	0
+AO_BMSmod43LR_BU1ES1	Unsigned Integer	16	111	0
+AO_BMSSOC_BU1ES1	Signed Two’s Complement Integer	16	112	0
+AO_BMSIdc_BU1ES1	Signed Two’s Complement Integer	16	113	0
+AO_BMSVdc_BU1ES1	Signed Two’s Complement Integer	16	114	0
+AO_BMSmaxSOC_BU1ES33	Unsigned Integer Two’s Complement Integer	16	102	0
