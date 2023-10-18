@@ -53,7 +53,7 @@ int main()
         headerJson(myJsonfile);
 
         while (std::getline(myfile, line))
-        // std::getline(myfile, line);
+         //std::getline(myfile, line);
         {
             std::cout << "  {" << std::endl;
             myJsonfile << "  {" << std::endl;
@@ -64,16 +64,21 @@ int main()
             else
             {
                 int i = 0;
-               // std::cout << line << std::endl;
-                std::vector<std::string> word = split(line, ' ');
+               //std::cout << line << std::endl;
+                std::vector<std::string> word = split(line, '\t');
+               // for (auto i : word) std::cout << i << std::endl;
+
 
                 int l = word.size()-1;
+                //First field is "name"
                 std::cout << "  \"name\":" + word[0] + "," << std::endl;
                 myJsonfile << "  \"name\":" + word[0] + "," << std::endl;
 
-                std::cout << "  \"addr\":" + word[l] + "," << std::endl;
-                myJsonfile << "  \"addr\":" + word[l] + "," << std::endl;
+                //Second field is "addr"
+                std::cout << "  \"addr\":" + word[l-1] + "," << std::endl;
+                myJsonfile << "  \"addr\":" + word[l-1] + "," << std::endl;
 
+                //Third field is "size"
                 if (word[l - 2].compare("16")==0)
                 {
                     std::cout << "  \"size\": 1" << "," << std::endl;
@@ -86,23 +91,30 @@ int main()
                     myJsonfile << "  \"size\": 2" << "," << std::endl;
                 }
 
-                if (word[1].compare("Signed")==0)
+                //Fourth field is "type"
+                if (word[1].find("Signed") != std::string::npos)
                 {
+                   // std::cout << "fourth field:  \"type\":" + word[1] + "," << std::endl;
                     std::cout << "  \"type\": 1" << "," << std::endl;
                     myJsonfile << "  \"type\": 1" << "," << std::endl;
                 }
-                else if (word[1].compare("Unsigned")==0)
+                else if (word[1].find("Unsigned") != std::string::npos)
                 {
                     std::cout << "  \"type\": 2" << "," << std::endl;
-                    myJsonfile << "  \"type\": 1" << "," << std::endl;
+                    myJsonfile << "  \"type\": 2" << "," << std::endl;
                 }
+  
+                //Last field is "value"
+                std::cout << "  \"value\":" + word[l] + "," << std::endl;
+                myJsonfile << "  \"value\":" + word[l] + "," << std::endl;
+
+
                 std::cout << "  }\n" << std::endl;
                 myJsonfile << "  }\n" << std::endl;
             }
         }
         footerJson(myJsonfile);
         myJsonfile.close();
-
     }
 
     else
