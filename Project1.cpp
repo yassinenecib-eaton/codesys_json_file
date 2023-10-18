@@ -4,6 +4,35 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
+#include <vector>
+
+void headerJson()
+{
+    std::cout << "{" << std::endl;
+    std::cout << "  \"points\":[" << std::endl;
+}
+
+void footerJson()
+{
+    std::cout << " ]" << std::endl;
+    std::cout << "}" << std::endl;
+}
+
+
+// for string delimiter
+std::vector<std::string> split(const std::string& s, char delim) 
+{
+    std::vector<std::string> result;
+    std::stringstream ss(s);
+    std::string item;
+
+    while (getline(ss, item, delim)) {
+        result.push_back(item);
+    }
+
+    return result;
+}
 
 int main()
 {
@@ -12,25 +41,55 @@ int main()
 
     if (myfile.is_open())
     {
+        headerJson();
 
         while (std::getline(myfile, line))
+        // std::getline(myfile, line);
         {
+            std::cout << "  {" << std::endl;
             if (line == "")
             {
-                std::cout << "emptyy line" << std::endl;
+                std::cout << "empty line" << std::endl;
             }
             else
             {
-                std::cout << line << std::endl;
+                int i = 0;
+               // std::cout << line << std::endl;
+                std::vector<std::string> word = split(line, ' ');
+
+                int l = word.size()-1;
+                std::cout << "  \"name\":" + word[0] + "," << std::endl;
+
+                std::cout << "  \"addr\":" + word[l] + "," << std::endl;
+              
+                if (word[l - 2].compare("16")==0)
+                {
+                    std::cout << "  \"size\": 1" << "," << std::endl;
+                }
+
+                else if (word[l - 2].compare("32")==0)
+                {
+                    std::cout << "  \"size\": 2" << "," << std::endl;
+                }
+
+                if (word[1].compare("Signed")==0)
+                {
+                    std::cout << "  \"type\": 1" << "," << std::endl;
+                }
+                else if (word[1].compare("Unsigned")==0)
+                {
+                    std::cout << "  \"type\": 2" << "," << std::endl;
+                }
+                std::cout << "  }\n" << std::endl;
             }
         }
+        footerJson();
     }
 
     else
     {
         perror("The following error occurred");
     }
-    std::cout << "Hello World!\n";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
