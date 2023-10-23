@@ -1,0 +1,47 @@
+AO_BMSmaxPchrg_BU1ES1	Real (always 32 bits)	32	30	0
+AO_BMSmaxPdsch_BU1ES1	Real (always 32 bits)	32	32	0
+AO_BMSmaxSOC_BU1ES1	Signed Two’s Complement Integer	16	102	0
+AO_BMSminSOC_BU1ES1	Signed Two’s Complement Integer	16	103	0
+AO_BMSmaxIchrg_BU1ES1	Signed Two’s Complement Integer	16	104	0
+AO_BMSmaxIdsch_BU1ES1	Signed Two’s Complement Integer	16	105	0
+AO_BMSBattSt_BU1ES1	Unsigned Integer	16	109	0
+AO_BMSChaSt_BU1ES1	Unsigned Integer	16	110	0
+AO_BMSmod43LR_BU1ES1	Unsigned Integer	16	111	0
+AO_BMSSOC_BU1ES1	Signed Two’s Complement Integer	16	112	0
+AO_BMSIdc_BU1ES1	Signed Two’s Complement Integer	16	113	0
+AO_BMSVdc_BU1ES1	Signed Two’s Complement Integer	16	114	0
+AO_F_BU1	Unsigned Integer	16	60	0
+AO_Vab_BU1	Signed Two’s Complement Integer	16	61	0
+AO_Vbc_BU1	Signed Two’s Complement Integer	16	62	0
+AO_Vca_BU1	Signed Two’s Complement Integer	16	63	0
+AO_PF_BU1GN1	Signed Two’s Complement Integer	16	23	0
+AO_F_BU1GN1	Unsigned Integer	16	24	0
+AO_Vab_BU1GN1	Signed Two’s Complement Integer	16	25	0
+AO_Psum_BU1GN1	Real (always 32 bits)	32	48	0
+AO_Qsum_BU1GN1	Real (always 32 bits)	32	50	0
+AO_Ssum_BU1GN1	Real (always 32 bits)	32	52	0
+AO_PCSmaxPdsch_BU1ES1	Real (always 32 bits)	32	34	0
+AO_PCSmaxPchrg_BU1ES1	Real (always 32 bits)	32	36	0
+AO_PCSmaxQrated_BU1ES1	Real (always 32 bits)	32	38	0
+AO_PCSkW_BU1ES1	Real (always 32 bits)	32	40	0
+AO_PCSkVar_BU1ES1	Real (always 32 bits)	32	42	0
+AO_PCSkVA_BU1ES1	Real (always 32 bits)	32	44	0
+AO_PCSVdc_BU1ES1	Signed Two’s Complement Integer	16	115	0
+AO_PCSFreq_BU1ES1	Signed Two’s Complement Integer	16	116	0
+AO_PCSVll_BU1ES1	Signed Two’s Complement Integer	16	117	0
+AO_PCSPF_BU1ES1	Signed Two’s Complement Integer	16	118	0
+AO_InputWord_BU1UT1	Signed Two’s Complement Integer	16	0	0
+AO_RunSt_BU1PV1	Signed Two’s Complement Integer	16	80	0
+AO_F_BU1PV1	Unsigned Integer	16	81	0
+AO_Vab_BU1PV1	Signed Two’s Complement Integer	16	82	0
+AO_Psum_BU1PV1	Real (always 32 bits)	32	85	0
+AO_Qsum_BU1PV1	Real (always 32 bits)	32	87	0
+AO_F_BU1UT1	Unsigned Integer	16	70	0
+AO_Vab_BU1UT1	Signed Two’s Complement Integer	16	71	0
+AO_Vbc_BU1UT1	Signed Two’s Complement Integer	16	72	0
+AO_Vca_BU1UT1	Signed Two’s Complement Integer	16	73	0
+AO_Ssum_BU1UT1	Signed Two’s Complement Integer	16	76	0
+AO_PF_BU1UT1	Signed Two’s Complement Integer	16	77	0
+AO_VabAn_BU1UT1	Signed Two’s Complement Integer	16	79	0
+AO_Psum_BU1UT1	Real (always 32 bits)	32	91	0
+AO_Qsum_BU1UT1	Real (always 32 bits)	32	93	0
