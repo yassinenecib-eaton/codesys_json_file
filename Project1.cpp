@@ -109,7 +109,7 @@ int defineType(std::string& aString)
 
 void sortNumbers(std::vector <std::string> a_vector, std::vector<int>& a_vectorInteger)
 {
-    for (int i = 0; i < 47; i++)
+    for (int i = 0; i < a_vector.size(); i++)
     {
         a_vectorInteger.push_back(std::stoi(a_vector[i]));
     }
@@ -131,7 +131,7 @@ void buildJson(int i, int pos, vector<int> a_vectoSorted, vector<std::string> a_
 
     for (j = i - pos; j <= i + 1; j++)
     {
-        for (k = 0; k < 47; k++)
+        for (k = 0; k < a_vectoSorted.size(); k++)
         {
             if (stoi(a_vector[k]) == a_vectoSorted[j])
             {
@@ -156,7 +156,7 @@ unsigned int searchSequence(std::vector <std::string> a_vector, std::vector<int>
     sortNumbers(a_vector, a_vectorSorted);
     unsigned int step = computeStep(a_vectorSorted[1], a_vectorSorted[0]);
     std::cout << "\"seq\": [" << std::endl;
-    for (int i = 0; i < 47; i++)
+    for (int i = 0; i < a_vector.size(); i++)
     {
 
         if (a_vectorSorted[i + 1] + step == a_vectorSorted[i + 2])
@@ -179,7 +179,7 @@ unsigned int searchSequence(std::vector <std::string> a_vector, std::vector<int>
                 std::cout << "  }";
                 addComma = true;
             }
-            if (i + 2 < 47)
+            if (i + 2 < a_vector.size())
             {
                 step = computeStep(a_vectorSorted[i + 2], a_vectorSorted[i + 1]);
             }
