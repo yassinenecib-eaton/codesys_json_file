@@ -1,19 +1,29 @@
-// Project1.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// codesysReadHandleJson.cpp : Defines the entry point for the application.
 //
+
+using namespace std;
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
-void headerJson(std::ofstream& myfile)
+void headerJsonPt(std::ofstream& myfile)
 {
     std::cout << "{" << std::endl;
     myfile << "{" << std::endl;
     std::cout << "  \"points\":[" << std::endl;
     myfile << "  \"points\":[" << std::endl;
+}
 
+void headerJsonSeq(std::ofstream& myfile)
+{
+    std::cout << "{" << std::endl;
+    myfile << "{" << std::endl;
+    std::cout << "  \"seq\":[" << std::endl;
+    myfile << "  \"seq\":[" << std::endl;
 }
 
 void footerJson(std::ofstream& myfile)
@@ -24,9 +34,8 @@ void footerJson(std::ofstream& myfile)
     myfile << "}" << std::endl;
 }
 
-
 // for string delimiter
-std::vector<std::string> split(const std::string& s, char delim) 
+std::vector<std::string> split(const std::string& s, char delim)
 {
     std::vector<std::string> result;
     std::stringstream ss(s);
@@ -59,47 +68,136 @@ int defineSize(std::string& aString)
         }
     }
 
-     catch (std::string error)
-     {
-         std::cout << "Size value out of range: " + error << std::endl;
-     }
+    catch (std::string error)
+    {
+        std::cout << "Size value out of range: " + error << std::endl;
+    }
+    return -1;
 }
 
- int defineType(std::string& aString)
- {
-     try
-     {
-         //Fourth field is "type"
-         if (aString.find("Signed") != std::string::npos)
-         {
-             return 1;
-         }
-         else if (aString.find("Unsigned") != std::string::npos)
-         {
-             return 2;
-         }
+int defineType(std::string& aString)
+{
+    try
+    {
+        //Fourth field is "type"
+        if (aString.find("Signed") != std::string::npos)
+        {
+            return 1;
+        }
+        else if (aString.find("Unsigned") != std::string::npos)
+        {
+            return 2;
+        }
 
-         else if (aString.find("Real (always 32 bits)") != std::string::npos)
-         {
-             return 3;
-         }
+        else if (aString.find("Real (always 32 bits)") != std::string::npos)
+        {
+            return 3;
+        }
 
-         else
-         {
-             throw(aString);
-         }
+        else
+        {
+            throw(aString);
+        }
     }
-    
-    catch(std::string error)
+
+    catch (std::string error)
     {
         std::cout << "Type value out of range: " + error << std::endl;
     }
+    return -1;
 }
+
+void sortNumbers(std::vector <std::string> a_vector, std::vector<int>& a_vectorInteger)
+{
+    for (int i = 0; i < 47; i++)
+    {
+        a_vectorInteger.push_back(std::stoi(a_vector[i]));
+    }
+    std::sort(a_vectorInteger.begin(), a_vectorInteger.end());
+}
+
+unsigned int computeStep(unsigned int a, unsigned int b)
+{
+    return a - b;
+}
+
+void buildJson(int i, int pos, vector<int> a_vectoSorted, vector<std::string> a_vector, vector<int> listSizeInteger)
+{
+    static int nbrSeq = 0;
+    int k = 0;
+    int j = i - pos;
+    int startAddr = a_vectoSorted[j];
+    int sumSize = 0;
+
+    for (j = i - pos; j <= i + 1; j++)
+    {
+        for (k = 0; k < 47; k++)
+        {
+            if (stoi(a_vector[k]) == a_vectoSorted[j])
+            {
+                break;
+            }
+        }
+        sumSize += listSizeInteger[k];
+    }
+
+    std::cout << "   \"addr\":" << startAddr << std::endl;
+    std::cout << "   \"size\":" << sumSize << std::endl;
+
+    nbrSeq++;
+}
+
+unsigned int searchSequence(std::vector <std::string> a_vector, std::vector<int> listTypeInteger)
+{
+    int pos = 0;
+    bool addComma = false;
+    vector <int> a_vectorSorted;
+
+    sortNumbers(a_vector, a_vectorSorted);
+    unsigned int step = computeStep(a_vectorSorted[1], a_vectorSorted[0]);
+    std::cout << "\"seq\": [" << std::endl;
+    for (int i = 0; i < 47; i++)
+    {
+
+        if (a_vectorSorted[i + 1] + step == a_vectorSorted[i + 2])
+        {
+            pos++;
+        }
+
+        else
+        {
+            if (pos > 0)
+            {
+                if (addComma)
+                {
+                    std::cout << "," << std::endl;
+                    std::cout << std::endl;
+                }
+                std::cout << "  {" << std::endl;
+                buildJson(i, pos, a_vectorSorted, a_vector, listTypeInteger);
+                pos = 0;
+                std::cout << "  }";
+                addComma = true;
+            }
+            if (i + 2 < 47)
+            {
+                step = computeStep(a_vectorSorted[i + 2], a_vectorSorted[i + 1]);
+            }
+        }
+    }
+    std::cout << "\n]," << std::endl;
+
+    return 0;
+}
+
+std::string line;
+std::ifstream myfile("test.tsv");
+
 
 int main()
 {
-    std::string line;
-    std::ifstream myfile("example.txt");
+    std::vector<std::string> listAddr, listSize;
+    std::vector<int> listSizeInteger;
 
     if (myfile.is_open())
     {
@@ -107,10 +205,24 @@ int main()
         std::ofstream myJsonfile;
         myJsonfile.open("resultFile.json");
 
-        headerJson(myJsonfile);
+        //Display sequence
+        while (std::getline(myfile, line))
+        {
+            std::vector<std::string> sequenceVector = split(line, '\t');
+            size_t l = sequenceVector.size() - 1;
+            listAddr.push_back(sequenceVector[l - 1]);
+            listSizeInteger.push_back(defineSize(sequenceVector[l - 2]));
+        }
+        std::cout << "{" << std::endl;
+
+        searchSequence(listAddr, listSizeInteger);
+
+        headerJsonPt(myJsonfile);
+
+        myfile.clear();
+        myfile.seekg(0);
 
         while (std::getline(myfile, line))
-        // std::getline(myfile, line);
         {
             std::cout << "  {" << std::endl;
             myJsonfile << "  {" << std::endl;
@@ -120,32 +232,27 @@ int main()
             }
             else
             {
-                int i = 0;
-               //std::cout << line << std::endl;
                 std::vector<std::string> word = split(line, '\t');
-                //for (auto i : word) std::cout << i << std::endl;
+                size_t l = word.size() - 1;
 
-
-                int l = word.size()-1;
                 //First field is "name"
                 std::cout << "  \"name\":\"" + word[0] + "\"," << std::endl;
                 myJsonfile << "  \"name\":\"" + word[0] + "\"," << std::endl;
 
                 //Second field is "addr"
-                std::cout << "  \"addr\":" + word[l-1] + "," << std::endl;
-                myJsonfile << "  \"addr\":" + word[l-1] + "," << std::endl;
+                std::cout << "  \"addr\":" + word[l - 1] + "," << std::endl;
+                myJsonfile << "  \"addr\":" + word[l - 1] + "," << std::endl;
 
                 //Third field is "size"
                 unsigned int  a_size = defineSize(word[l - 2]);
                 std::cout << "  \"size\":" << a_size << "," << std::endl;
                 myJsonfile << "  \"size\":" << a_size << "," << std::endl;
-               
 
                 //Fourth field is "type"
                 unsigned int a_type = defineType(word[1]);
-                std::cout << "  \"size\":" << a_type << "," << std::endl;
-                myJsonfile << "  \"size\":" << a_type << "," << std::endl;
-  
+                std::cout << "  \"type\":" << a_type << "," << std::endl;
+                myJsonfile << "  \"type\":" << a_type << "," << std::endl;
+
                 //Last field is "value"
                 std::cout << "  \"value\":" + word[l] << std::endl;
                 myJsonfile << "  \"value\":" + word[l] << std::endl;
