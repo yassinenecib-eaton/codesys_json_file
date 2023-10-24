@@ -10,6 +10,10 @@ using namespace std;
 #include <vector>
 #include <algorithm>
 
+//Globa variable
+std::string line;
+std::ifstream myfile("test.tsv");
+
 void headerJsonPt(std::ofstream& myfile)
 {
     std::cout << "{" << std::endl;
@@ -22,8 +26,8 @@ void headerJsonSeq(std::ofstream& myfile)
 {
     std::cout << "{" << std::endl;
     myfile << "{" << std::endl;
-    std::cout << "  \"seq\":[" << std::endl;
-    myfile << "  \"seq\":[" << std::endl;
+    std::cout << "\"seq\":[" << std::endl;
+    myfile << "\"seq\":[" << std::endl;
 }
 
 void footerJson(std::ofstream& myfile)
@@ -41,10 +45,10 @@ std::vector<std::string> split(const std::string& s, char delim)
     std::stringstream ss(s);
     std::string item;
 
-    while (getline(ss, item, delim)) {
+    while (getline(ss, item, delim)) 
+    {
         result.push_back(item);
     }
-
     return result;
 }
 
@@ -116,19 +120,14 @@ void sortNumbers(std::vector <std::string> a_vector, std::vector<int>& a_vectorI
     std::sort(a_vectorInteger.begin(), a_vectorInteger.end());
 }
 
-unsigned int computeStep(unsigned int a, unsigned int b)
+void buildJson(int i, int pos, vector<int> a_vectoSorted, vector<std::string> a_vector, vector<int> listSizeInteger, std::ofstream& a_Jsonfile)
 {
-    return a - b;
-}
-
-void buildJson(int i, int pos, vector<int> a_vectoSorted, vector<std::string> a_vector, vector<int> listSizeInteger)
-{
-    static int nbrSeq = 0;
     int k = 0;
     int j = i - pos;
     int startAddr = a_vectoSorted[j];
     int sumSize = 0;
 
+    //Search the size corresponding size in the vector not sorted
     for (j = i - pos; j <= i + 1; j++)
     {
         for (k = 0; k < a_vectoSorted.size(); k++)
@@ -141,26 +140,32 @@ void buildJson(int i, int pos, vector<int> a_vectoSorted, vector<std::string> a_
         sumSize += listSizeInteger[k];
     }
 
+    //We display the first address/size of the numerical sequence of a node
     std::cout << "   \"addr\":" << startAddr << std::endl;
+    a_Jsonfile << "   \"addr\":" << startAddr << std::endl;
     std::cout << "   \"size\":" << sumSize << std::endl;
-
-    nbrSeq++;
+    a_Jsonfile << "   \"size\":" << sumSize << std::endl;
 }
 
-unsigned int searchSequence(std::vector <std::string> a_vector, std::vector<int> listTypeInteger)
+unsigned int searchSequence(std::vector <std::string> a_vector, std::vector<int> listTypeInteger, std::ofstream& a_Jsonfile)
 {
     int pos = 0;
     bool addComma = false;
     vector <int> a_vectorSorted;
 
+    //Sort address from the smaller to the bigger
     sortNumbers(a_vector, a_vectorSorted);
-    unsigned int step = computeStep(a_vectorSorted[1], a_vectorSorted[0]);
-    std::cout << "\"seq\": [" << std::endl;
+    
+    //Look for a numerical sequence between 2 numbers
+    unsigned int step = a_vectorSorted[1] - a_vectorSorted[0];
+   // std::cout << "\"seq\": [" << std::endl;
+
+    //Search this squence through the vector
     for (int i = 0; i < a_vector.size(); i++)
     {
-
         if (a_vectorSorted[i + 1] + step == a_vectorSorted[i + 2])
         {
+            //As long as we find a sequence we increment position
             pos++;
         }
 
@@ -168,30 +173,33 @@ unsigned int searchSequence(std::vector <std::string> a_vector, std::vector<int>
         {
             if (pos > 0)
             {
+                //Dot not add comma at the last of the js node {},
                 if (addComma)
                 {
                     std::cout << "," << std::endl;
+                    a_Jsonfile << "," << std::endl;
                     std::cout << std::endl;
+                    a_Jsonfile << std::endl;
                 }
                 std::cout << "  {" << std::endl;
-                buildJson(i, pos, a_vectorSorted, a_vector, listTypeInteger);
+                a_Jsonfile << "  {" << std::endl;
+                buildJson(i, pos, a_vectorSorted, a_vector, listTypeInteger, a_Jsonfile);
                 pos = 0;
                 std::cout << "  }";
+                a_Jsonfile << "  }";
                 addComma = true;
             }
+            //Look for a new numerical sequence
             if (i + 2 < a_vector.size())
             {
-                step = computeStep(a_vectorSorted[i + 2], a_vectorSorted[i + 1]);
+                step = a_vectorSorted[i + 2] - a_vectorSorted[i + 1];
             }
         }
     }
     std::cout << "\n]," << std::endl;
-
+    a_Jsonfile << "\n]," << std::endl;
     return 0;
 }
-
-std::string line;
-std::ifstream myfile("test.tsv");
 
 
 int main()
@@ -213,11 +221,11 @@ int main()
             listAddr.push_back(sequenceVector[l - 1]);
             listSizeInteger.push_back(defineSize(sequenceVector[l - 2]));
         }
-        std::cout << "{" << std::endl;
 
-        searchSequence(listAddr, listSizeInteger);
-
+        headerJsonSeq(myJsonfile);
+        searchSequence(listAddr, listSizeInteger, myJsonfile);
         headerJsonPt(myJsonfile);
+
 
         myfile.clear();
         myfile.seekg(0);
