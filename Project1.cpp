@@ -16,10 +16,10 @@ std::ifstream myfile("test.tsv");
 
 void headerJsonPt(std::ofstream& myfile)
 {
-    std::cout << "{" << std::endl;
-    myfile << "{" << std::endl;
-    std::cout << "  \"points\":[" << std::endl;
-    myfile << "  \"points\":[" << std::endl;
+    //std::cout << "{" << std::endl;
+    //myfile << "{" << std::endl;
+    std::cout << "  \"points\": [" << std::endl;
+    myfile << "  \"points\": [" << std::endl;
 }
 
 void headerJsonSeq(std::ofstream& myfile)
@@ -32,6 +32,8 @@ void headerJsonSeq(std::ofstream& myfile)
 
 void footerJson(std::ofstream& myfile)
 {
+    std::cout << "  }" << std::endl;
+    myfile << "  }" << std::endl;
     std::cout << " ]" << std::endl;
     myfile << " ]" << std::endl;
     std::cout << "}" << std::endl;
@@ -141,8 +143,8 @@ void buildJson(int i, int pos, vector<int> a_vectoSorted, vector<std::string> a_
     }
 
     //We display the first address/size of the numerical sequence of a node
-    std::cout << "   \"addr\":" << startAddr << std::endl;
-    a_Jsonfile << "   \"addr\":" << startAddr << std::endl;
+    std::cout << "   \"addr\":" << startAddr << "," << std::endl;
+    a_Jsonfile << "   \"addr\":" << startAddr << "," << std::endl;
     std::cout << "   \"size\":" << sumSize << std::endl;
     a_Jsonfile << "   \"size\":" << sumSize << std::endl;
 }
@@ -206,6 +208,7 @@ int main()
 {
     std::vector<std::string> listAddr, listSize;
     std::vector<int> listSizeInteger;
+    bool l_addComma = false;
 
     if (myfile.is_open())
     {
@@ -232,6 +235,12 @@ int main()
 
         while (std::getline(myfile, line))
         {
+            if (l_addComma)
+            {
+                std::cout << "  }," << std::endl;
+                myJsonfile << "  }," << std::endl;
+                l_addComma = false;
+            }
             std::cout << "  {" << std::endl;
             myJsonfile << "  {" << std::endl;
             if (line == "")
@@ -243,6 +252,7 @@ int main()
                 std::vector<std::string> word = split(line, '\t');
                 size_t l = word.size() - 1;
 
+                
                 //First field is "name"
                 std::cout << "  \"name\":\"" + word[0] + "\"," << std::endl;
                 myJsonfile << "  \"name\":\"" + word[0] + "\"," << std::endl;
@@ -265,8 +275,9 @@ int main()
                 std::cout << "  \"value\":" + word[l] << std::endl;
                 myJsonfile << "  \"value\":" + word[l] << std::endl;
 
-                std::cout << "  },\n" << std::endl;
-                myJsonfile << "  },\n" << std::endl;
+               // std::cout << "  }\n" ;
+                //myJsonfile << "  }\n" ;
+                l_addComma = true;
             }
         }
         footerJson(myJsonfile);
