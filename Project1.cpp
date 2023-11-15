@@ -149,6 +149,28 @@ void buildJson(int i, int pos, vector<int> a_vectoSorted, vector<std::string> a_
     a_Jsonfile << "   \"size\":" << sumSize << std::endl;
 }
 
+void handleComma(bool* a_comma, std::ofstream& a_Jsonfile, bool seqOrNot)
+{
+    if (seqOrNot)
+    {
+        if (*a_comma)
+        {
+            std::cout << "  }," << std::endl;
+            a_Jsonfile << "  }," << std::endl;
+            *a_comma = false;
+        }
+    }
+    else
+    {
+        if (*a_comma)
+        {
+            std::cout << "," << std::endl;
+            a_Jsonfile << "," << std::endl;
+            std::cout << std::endl;
+            a_Jsonfile << std::endl;
+        }
+    }
+}
 unsigned int searchSequence(std::vector <std::string> a_vector, std::vector<int> listTypeInteger, std::ofstream& a_Jsonfile)
 {
     int pos = 0;
@@ -176,13 +198,8 @@ unsigned int searchSequence(std::vector <std::string> a_vector, std::vector<int>
             if (pos > 0)
             {
                 //Dot not add comma at the last of the js node {},
-                if (addComma)
-                {
-                    std::cout << "," << std::endl;
-                    a_Jsonfile << "," << std::endl;
-                    std::cout << std::endl;
-                    a_Jsonfile << std::endl;
-                }
+                handleComma(&addComma, a_Jsonfile, false);
+               
                 std::cout << "  {" << std::endl;
                 a_Jsonfile << "  {" << std::endl;
                 buildJson(i, pos, a_vectorSorted, a_vector, listTypeInteger, a_Jsonfile);
@@ -235,12 +252,8 @@ int main()
 
         while (std::getline(myfile, line))
         {
-            if (l_addComma)
-            {
-                std::cout << "  }," << std::endl;
-                myJsonfile << "  }," << std::endl;
-                l_addComma = false;
-            }
+            handleComma(&l_addComma, myJsonfile, true);
+
             std::cout << "  {" << std::endl;
             myJsonfile << "  {" << std::endl;
             if (line == "")
