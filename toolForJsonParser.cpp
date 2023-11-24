@@ -19,7 +19,7 @@ using namespace std;
 
 //Globa variable
 std::string line;
-std::ifstream myfile("../test.tsv");
+std::ifstream myfile("../../../test.tsv");
 
 void headerJsonPt(std::ofstream& myfile)
 {
@@ -261,7 +261,7 @@ int main()
     {
         //Create output file
         std::ofstream myJsonfile;
-        myJsonfile.open("../resultFile.json");
+        myJsonfile.open("../../../resultFile.json");
 
         //Display sequence
         while (std::getline(myfile, line))
